@@ -10,10 +10,18 @@ import UIKit
 
 final class HeaderView: UICollectionReusableView {
     
-    var imageView: UIImageView!
+    private var imageView: UIImageView!
+    private var visualEffectView: UIVisualEffectView!
+    
+    var animator: UIViewPropertyAnimator!
     
     override init(frame: CGRect) {
         super.init(frame: frame)
+        setupView()
+        addConstraint()
+    }
+    
+    private func setupView() {
         backgroundColor = .red
         
         imageView = UIImageView()
@@ -22,6 +30,19 @@ final class HeaderView: UICollectionReusableView {
         imageView.contentMode = .scaleAspectFill
         addSubview(imageView)
         
+        animator = UIViewPropertyAnimator(duration: 3.0, curve: .linear, animations: {
+            self.visualEffectView = UIVisualEffectView(effect: UIBlurEffect(style: .regular))
+            self.visualEffectView.translatesAutoresizingMaskIntoConstraints = false
+            self.addSubview(self.visualEffectView)
+            
+            self.visualEffectView.topAnchor.constraint(equalTo: self.topAnchor).isActive = true
+            self.visualEffectView.leadingAnchor.constraint(equalTo: self.leadingAnchor).isActive = true
+            self.visualEffectView.trailingAnchor.constraint(equalTo: self.trailingAnchor).isActive = true
+            self.visualEffectView.bottomAnchor.constraint(equalTo: self.bottomAnchor).isActive = true
+        })
+    }
+    
+    private func addConstraint() {
         imageView.topAnchor.constraint(equalTo: topAnchor).isActive = true
         imageView.leadingAnchor.constraint(equalTo: leadingAnchor).isActive = true
         imageView.trailingAnchor.constraint(equalTo: trailingAnchor).isActive = true

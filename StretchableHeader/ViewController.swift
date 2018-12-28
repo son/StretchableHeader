@@ -11,6 +11,7 @@ import UIKit
 final class ViewController: UIViewController {
     
     private var collectionView: UICollectionView!
+    private var headerView: HeaderView?
     private let padding: CGFloat = 16
     
     override var preferredStatusBarStyle: UIStatusBarStyle {
@@ -36,6 +37,16 @@ final class ViewController: UIViewController {
         collectionView.contentInsetAdjustmentBehavior = .never
         view.addSubview(collectionView)
     }
+    
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        
+        let contentOffsetY = scrollView.contentOffset.y
+        if contentOffsetY > 0 {
+            headerView?.animator.fractionComplete = 0
+            return
+        }
+        headerView?.animator.fractionComplete = abs(contentOffsetY) / 100
+    }
 }
 
 extension ViewController: UICollectionViewDelegate {
@@ -56,8 +67,8 @@ extension ViewController: UICollectionViewDelegateFlowLayout {
 extension ViewController: UICollectionViewDataSource {
     
     func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
-        let header = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: HeaderView.description(), for: indexPath)
-        return header
+        headerView = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: HeaderView.description(), for: indexPath) as? HeaderView
+        return headerView!
     }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
